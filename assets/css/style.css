@@ -92,3 +92,7 @@ body {
   -moz-user-select: none;
   user-select: none;
 }
+
+.container .keys button[data-func="equal"] {
+  background-color: var(--equal-bg-color);
+}
