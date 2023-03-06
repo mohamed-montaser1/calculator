@@ -23,7 +23,10 @@ body {
   place-items: center;
   min-height: 100vh;
 }
-
+body,
+html {
+  overflow-x: hidden;
+}
 .screen input {
   background-color: inherit;
   border: none;
@@ -91,8 +94,10 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  font-size: 20px;
 }
 
-.container .keys button[data-func="equal"] {
+.container .keys button.equal {
   background-color: var(--equal-bg-color);
+  color: white;
 }

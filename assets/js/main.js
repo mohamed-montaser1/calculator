@@ -1,82 +1,76 @@
-let normalButtons = [];
-let functional_buttons = [];
 let allButtons = document.querySelectorAll(".keys button");
-let screenBefore = document.querySelector(".screen .before");
-let screenCurrent = document.querySelector(".screen .current");
+let before_screen = document.querySelector(".screen .before");
+let current_screen = document.querySelector(".screen .current");
 
-let minus = false;
+const show = function (number) {
+  current_screen.value += number;
+};
 
-for (let i = 0; i < allButtons.length; i++) {
-  if (allButtons[i].getAttribute("data-func")) {
-    functional_buttons.push(allButtons[i]);
-  } else {
-    normalButtons.push(allButtons[i]);
-  }
-}
-
-for (let i = 0; i < normalButtons.length; i++) {
-  normalButtons[i].onclick = function () {
-    screenCurrent.value += this.innerHTML;
-  };
-}
-
-for (let i = 0; i < functional_buttons.length; i++) {
-  functional_buttons[i].onclick = function () {
-    let elementDataset = this.dataset.func;
-    if (elementDataset === "equal") {
-      if (screenCurrent.value !== "" && screenBefore.value !== "") {
-        let finalScreenBefore = [];
-        for (let j = 0; j < screenBefore.value.length; j++) {
-          let element = screenBefore.value[j];
-          if (element == "×") {
-            finalScreenBefore.push("*");
-          } else {
-            finalScreenBefore.push(element);
-          }
-        }
-        console.log(finalScreenBefore);
-        screenCurrent.value = eval(
-          finalScreenBefore.join("") + screenCurrent.value
-        );
-        screenBefore.value = "";
-      }
-      return;
-    } else if (elementDataset === "clear-current") {
-      screenCurrent.value = "";
-      return;
-    } else if (elementDataset === "clear-all") {
-      screenCurrent.value = "";
-      screenBefore.value = "";
-      return;
-    } else if (elementDataset === "toggle-minus") {
-      if (!minus) screenCurrent.value = `-${screenCurrent.value}`;
-      else if (minus) screenCurrent.value = screenCurrent.value.slice(1);
-
-      minus = !minus;
-
-      return;
-    } else if (elementDataset === "remove-one") {
-      screenCurrent.value = screenCurrent.value.slice(0, -1);
-      return;
-    } else if (elementDataset === "by-with-current") {
-      screenBefore.value = `1 / ${screenCurrent.value} `;
-      screenCurrent.value = eval(screenBefore.value);
-    } else if (elementDataset === "power") {
-      screenBefore.value = `${screenCurrent.value} ** 2`;
-      screenCurrent.value = eval(screenBefore.value);
-      return;
-    } else if (elementDataset === "sqrt") {
-      screenBefore.value = `√${screenCurrent.value}`;
-      screenCurrent.value = Math.sqrt(screenCurrent.value);
-      return;
-    }
-    if (screenBefore.value == "") {
-      screenBefore.value += `${screenCurrent.value} ${this.innerHTML} `;
-      screenCurrent.value = "";
+const equal = function () {
+  let final_screen_before = [];
+  for (let i = 0; i < before_screen.value.length; i++) {
+    if (before_screen.value[i] === "x") {
+      final_screen_before.push("*");
     } else {
-      screenBefore.value = `${this.innerHTML} ${screenCurrent.value}`;
-      screenCurrent.value = "";
+      final_screen_before.push(before_screen.value[i]);
     }
-    return;
-  };
-}
+  }
+  if (current_screen.value == "" || before_screen.value == "") return;
+  current_screen.value = eval(
+    final_screen_before.join("") + current_screen.value
+  );
+  before_screen.value = "";
+};
+
+const deleteOne = function () {
+  current_screen.value = current_screen.value.slice(0, -1);
+};
+
+const power = function () {
+  current_screen.value = Math.pow(current_screen.value, 2);
+  before_screen.value = "";
+};
+
+const clearCurrent = function () {
+  current_screen.value = "";
+};
+
+const clearAll = function () {
+  current_screen.value = "";
+  before_screen.value = "";
+};
+
+const toggleMinus = function () {
+  if (!current_screen.value.startsWith("-")) {
+    current_screen.value = `-${current_screen.value}`;
+  } else if (current_screen.value.startsWith("-")) {
+    let arr = [...current_screen.value];
+    arr.shift();
+    current_screen.value = arr.join("");
+  }
+};
+
+const by = function (num) {
+  if (current_screen.value == "") return;
+  if (num === "1/x") current_screen.value = 1 / current_screen.value;
+  else showOperator(num);
+};
+
+const sqrt = () => (current_screen.value = Math.sqrt(current_screen.value));
+
+const modul = () => showOperator("%");
+
+const multiply = () => showOperator("x");
+
+const minus = () => showOperator("-");
+
+const plus = () => showOperator("+");
+
+const showOperator = function (operator) {
+  if (current_screen.value == "") return;
+  if (current_screen.value !== "" && before_screen.value !== "") {
+    equal();
+  }
+  before_screen.value = `${current_screen.value} ${operator}`;
+  current_screen.value = "";
+};
