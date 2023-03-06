@@ -68,9 +68,23 @@ const plus = () => showOperator("+");
 
 const showOperator = function (operator) {
   if (current_screen.value == "") return;
-  if (current_screen.value !== "" && before_screen.value !== "") {
-    equal();
-  }
+  if (current_screen.value !== "" && before_screen.value !== "") equal();
+
   before_screen.value = `${current_screen.value} ${operator}`;
   current_screen.value = "";
 };
+
+const switcher = document.querySelector(".switcher");
+let theme_status = false;
+switcher.addEventListener("click", (e) => {
+  if (!theme_status) {
+    // dark theme
+    document.body.classList.add("dark");
+    switcher.classList.add("dark");
+    theme_status = true;
+  } else if (theme_status) {
+    document.body.classList.remove("dark");
+    theme_status = false;
+    switcher.classList.remove("dark");
+  }
+});
